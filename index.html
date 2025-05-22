@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>www.dailysuika.com</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-
   <style>
     :root {
       --bg-light: #ffffff;
@@ -27,10 +26,9 @@
       background-color: var(--bg-dark);
       color: var(--text-dark);
     }
-    #dark-toggle {
+    #dark-toggle, #toggle-yuki {
       position: fixed;
       bottom: 10px;
-      left: 10px;
       background: var(--accent);
       border: none;
       color: #fff;
@@ -39,29 +37,13 @@
       border-radius: 4px;
       font-size: 0.9rem;
       z-index: 1000;
-    }
-    #dark-toggle:hover {
-      background: #4444ee;
-    }
-
-    /* Toggle Yuki button style matching dark-toggle */
-    #toggle-yuki {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      background: var(--accent);
-      border: none;
-      color: #fff;
-      padding: 6px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      z-index: 1001;
       transition: background 0.3s;
     }
-    #toggle-yuki:hover {
+    #dark-toggle:hover, #toggle-yuki:hover {
       background: #4444ee;
     }
+    #dark-toggle { left: 10px; }
+    #toggle-yuki { right: 10px; }
 
     #site-header {
       display: inline-flex;
@@ -150,7 +132,6 @@
       margin: 2px 0;
     }
 
-    /* SuikaYuki bouncing image */
     #yuki {
       position: fixed;
       bottom: 0;
@@ -203,6 +184,9 @@
 
   <button id="toggle-yuki">Toggle Yuku</button>
   <img id="yuki" src="images/SuikaYuki.png" alt="SuikaYuki" />
+
+  <!-- Audio for Yuku -->
+  <audio id="yuku-audio" src="Yukutalk.wav" preload="auto"></audio>
 
   <script>
     const toggle = document.getElementById('dark-toggle');
@@ -277,12 +261,12 @@
 
     // Yuki bounce + spin
     const yuki = document.getElementById('yuki');
+    const audio = document.getElementById('yuku-audio');
     let yukiVisible = false;
     let posX = 0, posY = 0, velX = 3, velY = 3, rotation = 0, rotationVelocity = 0.1;
 
     function animateYuki() {
       if (!yukiVisible) return;
-
       const winWidth = window.innerWidth;
       const winHeight = window.innerHeight;
       const imgWidth = yuki.offsetWidth;
@@ -311,6 +295,10 @@
     document.getElementById('toggle-yuki').addEventListener('click', () => {
       yukiVisible = !yukiVisible;
       if (yukiVisible) {
+        // Play sound on toggle ON
+        audio.currentTime = 0;
+        audio.play().catch(err => console.warn("Audio failed:", err));
+
         yuki.style.display = 'block';
         posX = 0;
         posY = 0;
