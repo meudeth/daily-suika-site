@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>www.dailysuika.com</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <style>
+    :root {
+      --bg-light: #ffffff;
+      --text-light: #333333;
+      --bg-dark: #1e1e1e;
+      --text-dark: #f0f0f0;
+      --accent: #5555ff;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+      text-align: center;
+      background-color: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.3s, color 0.3s;
+    }
+    body.dark {
+      background-color: var(--bg-dark);
+      color: var(--text-dark);
+    }
+    #dark-toggle {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      z-index: 1000;
+    }
+    #dark-toggle:hover {
+      background: #4444ee;
+    }
+    #site-header {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    #site-header span {
+      font-family: monospace;
+      font-size: 1.2rem;
+      color: inherit;
+    }
+    #site-header img {
+      width: 24px;
+      height: 24px;
+      margin-left: 8px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin: 5px 0 20px;
+    }
+    button {
+      margin: 0 10px;
+      padding: 6px 12px;
+      font-size: 1rem;
+      background: var(--accent);
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4444ee;
+    }
+    input[type="number"] {
+      width: 60px;
+      font-size: 1rem;
+      text-align: center;
+      margin-left: 10px;
+      padding: 4px;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      background: transparent;
+      color: inherit;
+    }
+    img#suika-image {
+      display: block;
+      margin: 20px auto;
+      max-width: 900px;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    #credit {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: inherit;
+    }
+    #credit a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    #credit a:hover {
+      text-decoration: underline;
+    }
+    #contact {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: inherit;
+    }
+    #contact a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    #contact a:hover {
+      text-decoration: underline;
+    }
+    #footer {
+      margin-top: 8px;
+      color: #888;
+    }
+    #footer small {
+      display: block;
+      font-size: 0.75rem;
+      margin: 2px 0;
+    }
+
+    /* SuikaYuki bouncing image */
+    #yuki {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 120px;
+      height: auto;
+      pointer-events: none;
+      user-select: none;
+      transform-origin: center center;
+      z-index: 9999;
+      will-change: transform, left, bottom;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <button id="dark-toggle">Dark Mode</button>
+
+  <div id="site-header">
+    <span>www.dailysuika.com</span>
+    <img src="favicon.ico" alt="Suika icon">
+  </div>
+
+  <h1>Daily Suika Image</h1>
+
+  <div>
+    <button id="prev-day">Previous</button>
+    <span id="day-count">#Day 01</span>
+    <button id="next-day">Next</button>
+    <label for="day-input">Go to day:</label>
+    <input id="day-input" type="number" min="1" />
+    <button id="go-day">Go</button>
+  </div>
+
+  <img id="suika-image" src="images/sadsuika.jpg" alt="Suika Ibuki" />
+
+  <p id="credit">
+    Art by <a id="artist-name" href="#" target="_blank" rel="noopener noreferrer">Unknown</a>
+  </p>
+
+  <div id="contact">
+    If you experience any issues or have inquiries, please contact us at
+    <a href="mailto:dailysuika@protonmail.com">dailysuika@protonmail.com</a>
+  </div>
+
+  <div id="footer">
+    <small>Site created on 22/05/2025</small>
+    <small>Version 1.0</small>
+  </div>
+
+  <button id="toggle-yuki" style="position:fixed; bottom:20px; right:20px; z-index:1001;">
+    Toggle Yuku
+  </button>
+  <img id="yuki" src="images/SuikaYuki.png" alt="SuikaYuki" />
+
+  <script>
+    const toggle = document.getElementById('dark-toggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const stored = localStorage.getItem('darkMode');
+    function applyTheme(dark) {
+      document.body.classList.toggle('dark', dark);
+      toggle.textContent = dark ? 'Light Mode' : 'Dark Mode';
+    }
+    if (stored !== null) applyTheme(stored === 'true');
+    else applyTheme(prefersDark);
+    toggle.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark');
+      applyTheme(isDark);
+      localStorage.setItem('darkMode', isDark);
+    });
+
+    const launchDate = new Date("2024-06-01");
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    launchDate.setHours(0,0,0,0);
+    const msInDay = 1000*60*60*24;
+    const totalDays = Math.floor((today - launchDate)/msInDay) + 1;
+    let currentDay = totalDays;
+
+    const dayCountEl = document.getElementById("day-count");
+    const prevBtn = document.getElementById("prev-day");
+    const nextBtn = document.getElementById("next-day");
+    const dayInput = document.getElementById("day-input");
+    const goBtn = document.getElementById("go-day");
+    const suikaImage = document.getElementById("suika-image");
+    const artistNameEl = document.getElementById("artist-name");
+
+    let imageData = {};
+
+    function updateDayDisplay() {
+      dayCountEl.textContent = `#Day ${String(currentDay).padStart(2,'0')}`;
+      dayInput.value = currentDay;
+      const data = imageData[currentDay];
+      if (!data) {
+        suikaImage.src = "images/sadsuika.jpg";
+        artistNameEl.textContent = "Unknown";
+        artistNameEl.href = "#";
+        artistNameEl.style.pointerEvents = "none";
+      } else {
+        suikaImage.src = "images/" + data.filename;
+        artistNameEl.textContent = data.artist;
+        artistNameEl.href = data.url;
+        artistNameEl.style.pointerEvents = "auto";
+      }
+    }
+
+    prevBtn.onclick = () => { if(currentDay > 1){ currentDay--; updateDayDisplay(); }};
+    nextBtn.onclick = () => { if(currentDay < totalDays){ currentDay++; updateDayDisplay(); }};
+    goBtn.onclick = () => {
+      const d = parseInt(dayInput.value, 10);
+      if (d >= 1 && d <= totalDays) { currentDay = d; updateDayDisplay(); }
+      else alert(`Please enter a number between 1 and ${totalDays}`);
+    };
+    dayInput.addEventListener('keydown', e => { if (e.key === 'Enter') goBtn.click(); });
+
+    fetch('imageData.json')
+      .then(res => res.json())
+      .then(json => {
+        imageData = json;
+        updateDayDisplay();
+      })
+      .catch(err => {
+        console.error("Failed to load imageData.json", err);
+        updateDayDisplay();
+      });
+
+    // Yuki bounce + spin
+    const yuki = document.getElementById('yuki');
+    let yukiVisible = false;
+    let posX = 0, posY = 0, velX = 3, velY = 3, rotation = 0, rotationVelocity = 0.1;
+
+    function animateYuki() {
+      if (!yukiVisible) return;
+
+      const winWidth = window.innerWidth;
+      const winHeight = window.innerHeight;
+      const imgWidth = yuki.offsetWidth;
+      const imgHeight = yuki.offsetHeight;
+
+      posX += velX;
+      posY += velY;
+
+      if (posX + imgWidth >= winWidth || posX <= 0) {
+        velX = -velX;
+        rotationVelocity += 0.2;
+      }
+      if (posY + imgHeight >= winHeight || posY <= 0) {
+        velY = -velY;
+        rotationVelocity += 0.2;
+      }
+
+      rotation += rotationVelocity;
+      yuki.style.left = posX + 'px';
+      yuki.style.bottom = posY + 'px';
+      yuki.style.transform = `rotate(${rotation}deg)`;
+
+      requestAnimationFrame(animateYuki);
+    }
+
+    document.getElementById('toggle-yuki').addEventListener('click', () => {
+      yukiVisible = !yukiVisible;
+      if (yukiVisible) {
+        yuki.style.display = 'block';
+        posX = 0;
+        posY = 0;
+        velX = 3;
+        velY = 3;
+        rotation = 0;
+        rotationVelocity = 0.1;
+        animateYuki();
+      } else {
+        yuki.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
