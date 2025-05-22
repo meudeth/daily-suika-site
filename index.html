@@ -29,7 +29,7 @@
     }
     #dark-toggle {
       position: fixed;
-      top: 10px;
+      bottom: 10px;
       left: 10px;
       background: var(--accent);
       border: none;
@@ -43,6 +43,26 @@
     #dark-toggle:hover {
       background: #4444ee;
     }
+
+    /* Toggle Yuki button style matching dark-toggle */
+    #toggle-yuki {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      z-index: 1001;
+      transition: background 0.3s;
+    }
+    #toggle-yuki:hover {
+      background: #4444ee;
+    }
+
     #site-header {
       display: inline-flex;
       align-items: center;
@@ -181,9 +201,7 @@
     <small>Version 1.0</small>
   </div>
 
-  <button id="toggle-yuki" style="position:fixed; bottom:20px; right:20px; z-index:1001;">
-    Toggle Yuku
-  </button>
+  <button id="toggle-yuki">Toggle Yuku</button>
   <img id="yuki" src="images/SuikaYuki.png" alt="SuikaYuki" />
 
   <script>
@@ -202,7 +220,7 @@
       localStorage.setItem('darkMode', isDark);
     });
 
-    const launchDate = new Date("2024-06-01");
+    const launchDate = new Date("2025-05-22");
     const today = new Date();
     today.setHours(0,0,0,0);
     launchDate.setHours(0,0,0,0);
